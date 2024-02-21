@@ -4,8 +4,6 @@ import math
 import sys
 import pygame.freetype
 
-# Idea is to make game where plane upgrades after certain amount of time alive. Enemy sprites are shooting at you, 3 at a time. Once all of the enemy sprites are dead, the next wave of sprites loads in. Maybe fades in from the side?
-
 
 class Plane(pygame.sprite.Sprite):
     def __init__(self, image, x, y, scale=0.3):
