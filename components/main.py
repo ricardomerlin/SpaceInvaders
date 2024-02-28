@@ -36,7 +36,7 @@ plane = Plane(screen, x, y, bullets, bad_bullets, plane_1_standard, plane_1_slow
 
 bg = Background('../images/space.jpg', SCREEN_WIDTH, SCREEN_HEIGHT)
 
-title_screen = TitleScreen()
+title_screen = TitleScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 clock = pygame.time.Clock()
 running = True
@@ -53,7 +53,7 @@ while running:
                 title_screen.start_game()
                 plane.start_time = pygame.time.get_ticks()  # Set start_time when the game starts
                 game_running = True
-                
+
     bg.update(dt, game_running)
     bg.draw(screen)
 
@@ -67,6 +67,8 @@ while running:
         plane.draw(screen)
         plane.healthbar(screen)
         Bullet.draw_all(screen)
+        bullets.update(dt)
+        bad_bullets.update(dt)
     
     else:
         title_screen.update(screen)

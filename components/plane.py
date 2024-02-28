@@ -30,7 +30,7 @@ class Plane(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speed = 300
-        self.can_shoot = False
+        self.can_shoot = True
         self.shoot_timer = 0
         self.original_image = None
         self.planes = pygame.sprite.Group()
@@ -46,17 +46,26 @@ class Plane(pygame.sprite.Sprite):
         self.elapsed_seconds = 0
 
     def update(self, dt, elapsed_seconds):
-        movement = self.speed * dt  # Calculate movement distance based on time
+        movement = self.speed * dt 
 
-        # Update elapsed seconds
         self.elapsed_seconds = elapsed_seconds
 
-        # Check if the plane can shoot
         if self.can_shoot:
-            self.shoot_timer += dt
-            if self.shoot_timer >= 0.3:
-                self.shoot()
-                self.shoot_timer = 0
+            if self.original_image == self.plane_1_standard or self.original_image == self.plane_1_fast or self.original_image == self.plane_1_slow:
+                self.shoot_timer += dt
+                if self.shoot_timer >= 0.3:
+                    self.shoot()
+                    self.shoot_timer = 0
+            if self.original_image == self.plane_2_standard or self.original_image == self.plane_2_fast or self.original_image == self.plane_2_slow:
+                self.shoot_timer += dt
+                if self.shoot_timer >= 0.2:
+                    self.shoot()
+                    self.shoot_timer = 0
+            if self.original_image == self.plane_3_standard or self.original_image == self.plane_3_fast or self.original_image == self.plane_3_slow:
+                self.shoot_timer += dt
+                if self.shoot_timer >= 0.1:
+                    self.shoot()
+                    self.shoot_timer = 0
 
         # Handle movement
         keys = pygame.key.get_pressed()
@@ -122,14 +131,9 @@ class Plane(pygame.sprite.Sprite):
             for bullet in bad_bullet_hits:
                 self.health -= 10
 
-
-
-
         bad_bullet_hits = pygame.sprite.spritecollide(self, self.bad_bullets, True)
         for bullet in bad_bullet_hits:
             self.health -= 10
-
-
 
     def change_sprite(self, new_image, new_scale):
         self.planes.remove(self)
@@ -176,5 +180,18 @@ class Plane(pygame.sprite.Sprite):
         screen.blit(self.image, self.rect)
 
     def shoot(self):
-        bullet = Bullet(self.rect.centerx, self.rect.top)
-        Bullet.bullets.add(bullet)
+        if self.original_image in [self.plane_1_standard, self.plane_1_fast, self.plane_1_slow]:
+            bullet = Bullet(self.rect.centerx, self.rect.top)
+            Bullet.bullets.add(bullet)
+        elif self.original_image in [self.plane_2_standard, self.plane_2_fast, self.plane_2_slow]:
+            bullet1 = Bullet(self.rect.left, self.rect.centery)
+            Bullet.bullets.add(bullet1)
+            bullet2 = Bullet(self.rect.right, self.rect.centery)
+            Bullet.bullets.add(bullet2)
+        elif self.original_image in [self.plane_3_standard, self.plane_3_fast, self.plane_3_slow]:
+            bullet1 = Bullet(self.rect.left, self.rect.centery)
+            Bullet.bullets.add(bullet1)
+            bullet2 = Bullet(self.rect.right, self.rect.centery)
+            Bullet.bullets.add(bullet2)
+            bullet3 = Bullet(self.rect.centerx, self.rect.centery)
+            Bullet.bullets.add(bullet3)
