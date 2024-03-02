@@ -67,7 +67,6 @@ class Plane(pygame.sprite.Sprite):
                     self.shoot()
                     self.shoot_timer = 0
 
-        # Handle movement
         keys = pygame.key.get_pressed()
         dx, dy = 0, 0
 
@@ -80,12 +79,10 @@ class Plane(pygame.sprite.Sprite):
         if keys[pygame.K_DOWN]:
             dy += movement
 
-        # Adjust for diagonal movement
         if dx != 0 and dy != 0:
             dx *= 0.7071
             dy *= 0.7071
 
-        # Determine new sprite based on movement direction and time intervals
         if self.elapsed_seconds < 15:
             if dy < 0:
                 new_sprite = self.plane_1_fast
@@ -108,19 +105,15 @@ class Plane(pygame.sprite.Sprite):
             else:
                 new_sprite = self.plane_3_standard
 
-        # Change sprite if it's different from the current one
         if new_sprite != self.original_image:
             self.change_sprite(new_sprite, 0.4)
 
-        # Apply movement to the plane's position
         self.rect.x += dx
         self.rect.y += dy
 
-        # Clamp position to screen boundaries
         self.rect.x = max(0, min(self.rect.x, 1000 - self.rect.width))
         self.rect.y = max(0, min(self.rect.y, 1000 - self.rect.height))
 
-        # Update health bar and handle bullet collisions
         if (
             self.original_image == self.plane_1_standard
             or self.original_image == self.plane_2_standard
@@ -148,30 +141,26 @@ class Plane(pygame.sprite.Sprite):
         self.planes.add(self)
 
     def healthbar(self, window):
-        # Background rectangle
         bg_rect_width = 120
         bg_rect_height = 20
         bg_rect_x = 10
         bg_rect_y = 10
         pygame.draw.rect(window, (50, 50, 50), (bg_rect_x, bg_rect_y, bg_rect_width, bg_rect_height))
 
-        # Health bar
         health_bar_width = 100
         health_bar_height = 10
         health_bar_x = bg_rect_x + 5
         health_bar_y = bg_rect_y + 5
         pygame.draw.rect(window, (255, 0, 0), (health_bar_x, health_bar_y, health_bar_width, health_bar_height))
 
-        # Change color based on health level
         if self.health > 70:
-            color = (0, 255, 0)  # Green
+            color = (0, 255, 0)
         elif self.health > 30:
-            color = (255, 255, 0)  # Yellow
+            color = (255, 255, 0)
         else:
-            color = (255, 0, 0)  # Red
+            color = (255, 0, 0)
         pygame.draw.rect(window, color, (health_bar_x, health_bar_y, (self.health / self.max_health) * health_bar_width, health_bar_height))
 
-        # Health text
         font = pygame.font.Font(None, 20)
         text = font.render(f'Health: {self.health}/100', True, (255, 255, 255))
         window.blit(text, (bg_rect_x + bg_rect_width + 10, bg_rect_y))

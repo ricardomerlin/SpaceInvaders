@@ -23,3 +23,4 @@ class BadBullet(pygame.sprite.Sprite):
     @classmethod
     def draw_all(cls, screen):
         cls.bullets.draw(screen)
+
