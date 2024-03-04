@@ -2,10 +2,9 @@ import pygame
 from bullet import Bullet
 
 class Plane(pygame.sprite.Sprite):
-    def __init__(self, screen, x, y, bullets, bad_bullets, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast):
+    def __init__(self, screen, x, y, bad_bullets, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast):
         super().__init__()
         self.screen = screen
-        self.bullets = bullets
         self.bad_bullets = bad_bullets
 
         self.plane_1_standard = plane_1_standard
@@ -38,7 +37,6 @@ class Plane(pygame.sprite.Sprite):
         self.max_health = 100
         self.start_time = 0
 
-        print(self.original_image)
 
     def start_game(self):
         self.game_running = True
@@ -184,3 +182,9 @@ class Plane(pygame.sprite.Sprite):
             Bullet.bullets.add(bullet2)
             bullet3 = Bullet(self.rect.centerx, self.rect.centery)
             Bullet.bullets.add(bullet3)
+
+    def hit_enemy(self):
+        hit = pygame.sprite.spritecollide(self, self.enemies, True)
+        if hit:
+            self.enemies.health -= 10
+            return True
