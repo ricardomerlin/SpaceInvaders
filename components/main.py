@@ -8,6 +8,7 @@ from badBullet import BadBullet
 from background import Background
 from title_screen import TitleScreen
 from win_screen import WinScreen
+from gameover_screen import GameOverScreen
 
 pygame.init()
 
@@ -44,22 +45,26 @@ bg = Background('../images/space.jpg', SCREEN_WIDTH, SCREEN_HEIGHT)
 
 title_screen = TitleScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
 win_screen = WinScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
+game_over_screen = GameOverScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 clock = pygame.time.Clock()
 
 running = True
 game_running = False
 game_won = False
+game_over = False
 
 enemy_speed = 2
-enemy_wave_1_spawn_info = [Enemy_1(x=300, y=250, speed=2, movement_type="circular", screen_height=SCREEN_HEIGHT), Enemy_1(x=500, y=250, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT), Enemy_1(x=700, y=250, speed=2, movement_type="circular_opposite", screen_height=SCREEN_HEIGHT)]
+enemy_wave_1_spawn_info = [Enemy_1(x=300, y=250, speed=2, movement_type="circular", screen_height=SCREEN_HEIGHT), Enemy_1(x=700, y=250, speed=2, movement_type="circular_opposite", screen_height=SCREEN_HEIGHT), Enemy_1(x=500, y=50, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT), Enemy_1(x=500, y=325, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT), Enemy_1(x=500, y=600, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT)]
+
 enemy_wave_2_spawn_info = [Enemy_2(x=500, y=100, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT), Enemy_2(x=500, y=250, speed=2, movement_type="linear_opposite", screen_height=SCREEN_HEIGHT), Enemy_2(x=500, y=400, speed=2, movement_type="linear_opposite", screen_height=SCREEN_HEIGHT)]
+
 enemy_wave_3_spawn_info = [Enemy_3(x=500, y=100, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT)]
 
 
 spawn_enemy_event = pygame.USEREVENT + 1
 
-enemy_spawn_delay = 3
+enemy_spawn_delay = 2
 enemy_spawn_counter = 0
 
 enemy_wave_1_spawn_index = 0
@@ -82,6 +87,7 @@ def reset_game():
     enemies_1.empty()
     enemies_2.empty()
     enemies_3.empty()
+    
 
 while running:
     dt = clock.tick(60) / 1000.0
@@ -140,6 +146,13 @@ while running:
                 enemy_kill_counter += 1
                 enemy.kill()
 
+        if plane.health <= 0:
+            game_running = False
+            game_won = False
+            game_over = True
+            reset_game()
+
+
         for enemy in enemies_2:
             if enemy.killed:
                 enemy_kill_counter += 1
@@ -168,7 +181,13 @@ while running:
         if game_won:
             win_screen.update(screen)
         else:
-            title_screen.update(screen)
+            if not game_running:
+                if game_over:
+                    game_over_screen.draw(screen)
+                else:
+                    title_screen.update(screen)
+            else:
+                title_screen.update(screen)
 
     pygame.display.flip()
 

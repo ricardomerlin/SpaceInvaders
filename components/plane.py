@@ -30,11 +30,11 @@ class Plane(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.speed = 300
-        self.can_shoot = True
+        self.can_shoot = False
         self.shoot_timer = 0
         self.original_image = None
         self.planes = pygame.sprite.Group()
-        self.health = 100
+        self.health = 1000
         self.max_health = 100
         self.start_time = 0
 

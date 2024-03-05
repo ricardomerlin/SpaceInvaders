@@ -14,14 +14,14 @@ class Enemy_1(pygame.sprite.Sprite):
         self.start_time = pygame.time.get_ticks()
         self.initial_x = x
         self.initial_y = y
-        self.amplitude = 50
-        self.frequency = 2
+        self.amplitude = 100
+        self.frequency = 2.5
         self.phase = 0
         self.movement_type = movement_type
         self.entry_speed = 1
         self.entry_duration = 2
         self.entry_complete = False
-        self.health = 10
+        self.health = 100
         self.hit_time = None
         self.killed = False
         self.screen_height = screen_height
@@ -55,7 +55,7 @@ class Enemy_1(pygame.sprite.Sprite):
 
         if not self.can_shoot:
             self.shoot_timer += dt
-            if self.shoot_timer >= 1:
+            if self.shoot_timer >= 0.8:
                 self.can_shoot = True
                 self.shoot_timer = 0
 
