@@ -1,9 +1,10 @@
 import pygame
 import math
 from bullet import Bullet
+from badBullet import BadBullet
 
 class Enemy_1(pygame.sprite.Sprite):
-    def __init__(self, x, y, speed, movement_type):
+    def __init__(self, x, y, speed, movement_type, screen_height):
         super().__init__()
         self.image = pygame.image.load('../sprites/enemy_1.png')
         self.image = pygame.transform.scale(self.image, (100, 100))
@@ -20,9 +21,15 @@ class Enemy_1(pygame.sprite.Sprite):
         self.entry_speed = 1
         self.entry_duration = 2
         self.entry_complete = False
-        self.health = 100
+        self.health = 10
         self.hit_time = None
         self.killed = False
+        self.screen_height = screen_height
+
+        self.can_shoot = True
+        self.shoot_timer = 0
+
+        self.last_shot_time = pygame.time.get_ticks()
 
     def change_sprite(self, new_image_path):
         new_image = pygame.image.load(new_image_path)
@@ -37,16 +44,24 @@ class Enemy_1(pygame.sprite.Sprite):
             self.health -= 10
             if self.health <= 0:
                 self.killed = True
-                # self.kill()
             bullet.kill()
 
-    def update(self):
+    def update(self, dt):
         current_time = pygame.time.get_ticks()
         elapsed_time = (current_time - self.start_time) / 1000
 
         new_x = self.rect.x
         new_y = self.rect.y
 
+        if not self.can_shoot:
+            self.shoot_timer += dt
+            if self.shoot_timer >= 1:
+                self.can_shoot = True
+                self.shoot_timer = 0
+
+        if self.can_shoot:
+            self.shoot(dt)
+                
         if not self.entry_complete:
             entry_distance = self.entry_speed * self.entry_duration
             entry_speed_y = entry_distance / self.entry_duration
@@ -78,6 +93,13 @@ class Enemy_1(pygame.sprite.Sprite):
             if seconds_passed >= 0.1:
                 self.change_sprite('../sprites/enemy_1.png')
                 self.hit_time = None
+
+    def shoot(self, dt):
+        if self.can_shoot:
+            bullet = BadBullet(self.rect.centerx, self.rect.centery, self.screen_height)
+            BadBullet.bullets.add(bullet)
+            self.can_shoot = False
+
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)

@@ -3,17 +3,18 @@ import pygame
 class BadBullet(pygame.sprite.Sprite):
     bullets = pygame.sprite.Group()
 
-    def __init__(self, x, y):
+    def __init__(self, x, y, screen_height):
         super().__init__()
         self.image = pygame.Surface((5, 10))
         self.image.fill((255, 255, 0))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.speed = 5  # Placeholder bullet d
+        self.speed = 5
+        self.screen_height = screen_height
 
     def update(self, dt):
-        self.rect.y -= self.speed
-        if self.rect.bottom < 0:
+        self.rect.y += self.speed
+        if self.rect.top > self.screen_height:
             self.kill()
 
     @classmethod

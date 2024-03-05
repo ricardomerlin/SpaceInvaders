@@ -9,7 +9,7 @@ class Bullet(pygame.sprite.Sprite):
         self.image.fill((255, 255, 0))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.speed = 5  # Placeholder bullet d
+        self.speed = 5
 
     def update(self, dt):
         self.rect.y -= self.speed

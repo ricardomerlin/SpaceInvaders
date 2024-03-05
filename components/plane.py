@@ -1,11 +1,12 @@
 import pygame
 from bullet import Bullet
+from badBullet import BadBullet
 
 class Plane(pygame.sprite.Sprite):
-    def __init__(self, screen, x, y, bad_bullets, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast):
+    def __init__(self, screen, x, y, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast):
         super().__init__()
         self.screen = screen
-        self.bad_bullets = bad_bullets
+        self.bad_bullets = BadBullet.bullets
 
         self.plane_1_standard = plane_1_standard
         self.plane_1_slow = plane_1_slow
@@ -120,6 +121,7 @@ class Plane(pygame.sprite.Sprite):
             self.healthbar(self.screen)
             bad_bullet_hits = pygame.sprite.spritecollide(self, self.bad_bullets, True)
             for bullet in bad_bullet_hits:
+                print('Hit')
                 self.health -= 10
 
         bad_bullet_hits = pygame.sprite.spritecollide(self, self.bad_bullets, True)
@@ -170,6 +172,7 @@ class Plane(pygame.sprite.Sprite):
         if self.original_image in [self.plane_1_standard, self.plane_1_fast, self.plane_1_slow]:
             bullet = Bullet(self.rect.centerx, self.rect.top)
             Bullet.bullets.add(bullet)
+            print(Bullet.bullets)
         elif self.original_image in [self.plane_2_standard, self.plane_2_fast, self.plane_2_slow]:
             bullet1 = Bullet(self.rect.left, self.rect.centery)
             Bullet.bullets.add(bullet1)
