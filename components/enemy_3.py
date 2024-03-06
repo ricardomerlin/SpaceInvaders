@@ -2,6 +2,9 @@ import pygame
 import math
 from badBullet import BadBullet
 from bullet import Bullet
+from missles import Missle
+from monsterGoo import MonsterGoo
+import random
 
 class Enemy_3(pygame.sprite.Sprite):
     def __init__(self, x, y, speed, movement_type, screen_height):
@@ -14,20 +17,22 @@ class Enemy_3(pygame.sprite.Sprite):
         self.start_time = pygame.time.get_ticks()
         self.initial_x = x
         self.initial_y = y
-        self.amplitude = 50
+        self.amplitude = 200
         self.frequency = 2
         self.phase = 0
         self.movement_type = movement_type
         self.entry_speed = 1
         self.entry_duration = 2
         self.entry_complete = False
-        self.health = 10
+        self.health = 5000
         self.hit_time = None
         self.killed = False
         self.screen_height = screen_height
 
         self.can_shoot = True
+        self.can_shoot_goo = True
         self.shoot_timer = 0
+        self.shoot_goo_timer = 0
 
         self.last_shot_time = pygame.time.get_ticks()
 
@@ -37,7 +42,8 @@ class Enemy_3(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def hit(self):
-        bullet_hits = pygame.sprite.spritecollide(self, Bullet.bullets, True)
+        bullet_hits = pygame.sprite.spritecollide(self, Bullet.bullets, False)
+        missle_hits = pygame.sprite.spritecollide(self, Missle.missles, False)
         for bullet in bullet_hits:
             self.hit_time = pygame.time.get_ticks()
             self.change_sprite('../sprites/enemy_3_hit.png')
@@ -45,6 +51,13 @@ class Enemy_3(pygame.sprite.Sprite):
             if self.health <= 0:
                 self.killed = True
             bullet.kill()
+        for missle in missle_hits:
+            self.hit_time = pygame.time.get_ticks()
+            self.change_sprite('../sprites/enemy_3_hit.png')
+            self.health -= 30
+            if self.health <= 0:
+                self.killed = True
+            missle.hit = True   
 
     def update(self, dt):
         current_time = pygame.time.get_ticks()
@@ -55,12 +68,21 @@ class Enemy_3(pygame.sprite.Sprite):
 
         if not self.can_shoot:
             self.shoot_timer += dt
-            if self.shoot_timer >= 1:
+            if self.shoot_timer >= 0.3:
                 self.can_shoot = True
                 self.shoot_timer = 0
 
+        if not self.can_shoot_goo:
+            self.shoot_goo_timer += dt
+            if self.shoot_goo_timer >= 1:
+                self.can_shoot_goo = True
+                self.shoot_goo_timer = 0
+
         if self.can_shoot:
             self.shoot(dt)
+
+        if self.can_shoot_goo:
+            self.shoot_goo(dt)
 
         if not self.entry_complete:
             entry_distance = self.entry_speed * self.entry_duration
@@ -77,13 +99,7 @@ class Enemy_3(pygame.sprite.Sprite):
         else:
             if self.movement_type == "linear":
                 new_x = self.initial_x + self.amplitude * math.sin(self.frequency * elapsed_time + self.phase)
-                new_y = self.initial_y + self.speed * elapsed_time
-            elif self.movement_type == "circular":
-                new_x = 150 + 100 * math.cos(elapsed_time)
-                new_y = self.initial_y + 300 * math.sin(elapsed_time)
-            elif self.movement_type == "circular_opposite":
-                new_x = 750 - 100 * math.cos(elapsed_time)
-                new_y = self.initial_y + 300 * math.sin(elapsed_time)
+                new_y = self.initial_y + self.amplitude * math.cos(self.speed * elapsed_time)
 
         self.rect.x = new_x
         self.rect.y = new_y
@@ -101,6 +117,12 @@ class Enemy_3(pygame.sprite.Sprite):
             bullet3 = BadBullet(self.rect.centerx + 30, self.rect.centery, self.screen_height)
             BadBullet.bullets.add(bullet, bullet2, bullet3)
             self.can_shoot = False
+
+    def shoot_goo(self, dt):
+        if self.can_shoot_goo:
+            goo = MonsterGoo(self.rect.centerx, self.rect.centery, self.screen_height)
+            MonsterGoo.goos.add(goo)
+            self.can_shoot_goo = False
 
     def draw(self, screen):
         screen.blit(self.image, self.rect)

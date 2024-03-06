@@ -6,10 +6,10 @@ class BadBullet(pygame.sprite.Sprite):
     def __init__(self, x, y, screen_height):
         super().__init__()
         self.image = pygame.Surface((5, 10))
-        self.image.fill((255, 255, 0))
+        self.image.fill((255, 0, 0))
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
-        self.speed = 5
+        self.speed = 6
         self.screen_height = screen_height
 
     def update(self, dt):
