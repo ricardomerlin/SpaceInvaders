@@ -84,13 +84,13 @@ class Plane(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         dx, dy = 0, 0
 
-        if keys[pygame.K_RIGHT]:
+        if keys[pygame.K_d]:
             dx += movement
-        if keys[pygame.K_LEFT]:
+        if keys[pygame.K_a]:
             dx -= movement
-        if keys[pygame.K_UP]:
+        if keys[pygame.K_w]:
             dy -= movement
-        if keys[pygame.K_DOWN]:
+        if keys[pygame.K_s]:
             dy += movement
 
         if dx != 0 and dy != 0:

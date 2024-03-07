@@ -46,7 +46,7 @@ class Enemy_1(pygame.sprite.Sprite):
         for bullet in bullet_hits:
             self.hit_time = pygame.time.get_ticks()
             self.change_sprite('../sprites/enemy_1_hit.png')
-            self.health -= 10
+            self.health -= 1000
             if self.health <= 0:
                 self.killed = True
             bullet.kill()
