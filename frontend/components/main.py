@@ -36,10 +36,14 @@ plane_3_standard = pygame.image.load('../sprites/plane_3_standard.png')
 plane_3_slow = pygame.image.load('../sprites/plane_3_slow.png')
 plane_3_fast = pygame.image.load('../sprites/plane_3_fast.png')
 
+plane_1_hit = pygame.image.load('../sprites/plane_1_hit.png')
+plane_2_hit = pygame.image.load('../sprites/plane_2_hit.png')
+plane_3_hit = pygame.image.load('../sprites/plane_3_hit.png')
+
 x = 440
 y = 800
 
-plane = Plane(screen, x, y, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast)
+plane = Plane(screen, x, y, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast, plane_1_hit, plane_2_hit, plane_3_hit)
 
 bg = Background('../images/space.jpg', SCREEN_WIDTH, SCREEN_HEIGHT)
 
@@ -89,11 +93,11 @@ def reset_game():
     enemies_2.empty()
     enemies_3.empty()
     
-    enemy_wave_1_spawn_info = [Enemy_1(300, 250, speed=2, movement_type="circular", screen_height=SCREEN_HEIGHT), Enemy_1(x=700, y=250, speed=2, movement_type="circular_opposite", screen_height=SCREEN_HEIGHT), Enemy_1(x=500, y=50, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT), Enemy_1(x=500, y=325, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT), Enemy_1(x=500, y=600, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT)]
+    enemy_wave_1_spawn_info = [Enemy_1(300, 250, 2, "circular", SCREEN_HEIGHT), Enemy_1(700, 250, 2, "circular_opposite", SCREEN_HEIGHT), Enemy_1(500, 50, 2, "linear", SCREEN_HEIGHT), Enemy_1(500, 325, 2, "linear", SCREEN_HEIGHT), Enemy_1(500, 600, 2, "linear", SCREEN_HEIGHT)]
 
-    enemy_wave_2_spawn_info = [Enemy_2(x=500, y=100, speed=2, movement_type="linear", screen_height=SCREEN_HEIGHT), Enemy_2(x=500, y=250, speed=2, movement_type="linear_opposite", screen_height=SCREEN_HEIGHT), Enemy_2(x=500, y=400, speed=2, movement_type="linear_opposite", screen_height=SCREEN_HEIGHT), Enemy_2(x=200, y=300, speed=2, movement_type="downwards", screen_height=SCREEN_HEIGHT), Enemy_2(x=800, y=300, speed=2, movement_type="downwards", screen_height=SCREEN_HEIGHT)]
+    enemy_wave_2_spawn_info = [Enemy_2(500, 100, 2, "linear", SCREEN_HEIGHT), Enemy_2(500, 250, 2, "linear_opposite", SCREEN_HEIGHT), Enemy_2(500, 400, 2, "linear_opposite", SCREEN_HEIGHT), Enemy_2(200, 300, 2, "downwards", SCREEN_HEIGHT), Enemy_2(800, 300, 2, "downwards", SCREEN_HEIGHT)]
 
-    enemy_wave_3_spawn_info = [Enemy_3(x=500, y=100, speed=1, movement_type="linear", screen_height=SCREEN_HEIGHT)]
+    enemy_wave_3_spawn_info = [Enemy_3(500, 100, 1, "linear", SCREEN_HEIGHT)]
     
     enemy_wave_1_spawn_index = 0
     enemy_wave_2_spawn_index = 0

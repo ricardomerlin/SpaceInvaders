@@ -5,7 +5,7 @@ from missles import Missle
 from monsterGoo import MonsterGoo
 
 class Plane(pygame.sprite.Sprite):
-    def __init__(self, screen, x, y, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast):
+    def __init__(self, screen, x, y, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast, plane_1_hit, plane_2_hit, plane_3_hit):
         super().__init__()
         self.screen = screen
         self.bad_bullets = BadBullet.bullets
@@ -21,6 +21,10 @@ class Plane(pygame.sprite.Sprite):
         self.plane_3_standard = plane_3_standard
         self.plane_3_slow = plane_3_slow
         self.plane_3_fast = plane_3_fast
+
+        self.plane_1_hit = plane_1_hit
+        self.plane_2_hit = plane_2_hit
+        self.plane_3_hit = plane_3_hit
 
         self.image = self.plane_1_standard
         original_width, original_height = self.image.get_size()
@@ -41,6 +45,10 @@ class Plane(pygame.sprite.Sprite):
         self.max_health = 1000
         self.start_time = 0
 
+        self.hit_duration = 0.2
+        self.hit_timer = 0
+        self.is_hit = False
+
 
     def start_game(self):
         self.game_running = True
@@ -51,6 +59,29 @@ class Plane(pygame.sprite.Sprite):
         movement = self.speed * dt 
 
         self.elapsed_seconds = elapsed_seconds
+
+        if self.is_hit:
+            self.hit_timer += dt
+            if self.hit_timer < self.hit_duration:
+                hit_plane = None
+                if self.original_image == self.plane_1_standard or self.original_image == self.plane_1_fast or self.original_image == self.plane_1_slow:
+                    hit_plane = self.plane_1_hit
+                elif self.original_image == self.plane_2_standard or self.original_image == self.plane_2_fast or self.original_image == self.plane_2_slow:
+                    hit_plane = self.plane_2_hit
+                elif self.original_image == self.plane_3_standard or self.original_image == self.plane_3_fast or self.original_image == self.plane_3_slow:
+                    hit_plane = self.plane_3_hit
+                self.update_hit_sprite(hit_plane)
+            else:
+                self.is_hit = False
+                return_to_normal = None
+                if self.original_image == self.plane_1_standard or self.original_image == self.plane_1_fast or self.original_image == self.plane_1_slow:
+                    return_to_normal = self.plane_1_standard
+                elif self.original_image == self.plane_2_standard or self.original_image == self.plane_2_fast or self.original_image == self.plane_2_slow:
+                    return_to_normal = self.plane_2_standard
+                elif self.original_image == self.plane_3_standard or self.original_image == self.plane_3_fast or self.original_image == self.plane_3_slow:
+                    return_to_normal = self.plane_3_standard
+                self.update_hit_sprite(return_to_normal)
+                self.hit_timer = 0
 
         if self.can_shoot:
             if self.original_image == self.plane_1_standard or self.original_image == self.plane_1_fast or self.original_image == self.plane_1_slow:
@@ -84,13 +115,13 @@ class Plane(pygame.sprite.Sprite):
         keys = pygame.key.get_pressed()
         dx, dy = 0, 0
 
-        if keys[pygame.K_d]:
+        if keys[pygame.K_d] or keys[pygame.K_RIGHT]:
             dx += movement
-        if keys[pygame.K_a]:
+        if keys[pygame.K_a] or keys[pygame.K_LEFT]:
             dx -= movement
-        if keys[pygame.K_w]:
+        if keys[pygame.K_w] or keys[pygame.K_UP]:
             dy -= movement
-        if keys[pygame.K_s]:
+        if keys[pygame.K_s] or keys[pygame.K_DOWN]:
             dy += movement
 
         if dx != 0 and dy != 0:
@@ -132,11 +163,13 @@ class Plane(pygame.sprite.Sprite):
         enemy_goo_hits = pygame.sprite.spritecollide(self, MonsterGoo.goos, False)
         for bullet in bad_bullet_hits:
             self.health -= 10
+            self.is_hit = True
         for goo in enemy_goo_hits:
             if not goo.has_hit_plane:
                 goo.plane_hit = True
                 goo.has_hit_plane = True
                 self.health -= 30
+                self.is_hit = True
 
     def change_sprite(self, new_image, new_scale):
         self.planes.remove(self)
@@ -149,6 +182,10 @@ class Plane(pygame.sprite.Sprite):
         )
         self.original_image = new_image
         self.planes.add(self)
+
+    def update_hit_sprite(self, new_image_path):
+        self.image = pygame.transform.scale(new_image_path, (120, 120))
+        
 
     def healthbar(self, window):
         health_bar_width = 600
