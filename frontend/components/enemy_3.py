@@ -47,7 +47,7 @@ class Enemy_3(pygame.sprite.Sprite):
         for bullet in bullet_hits:
             self.hit_time = pygame.time.get_ticks()
             self.change_sprite('../sprites/enemy_3_hit.png')
-            self.health -= 1000
+            self.health -= 10
             if self.health <= 0:
                 self.killed = True
             bullet.kill()
@@ -68,13 +68,13 @@ class Enemy_3(pygame.sprite.Sprite):
 
         if not self.can_shoot:
             self.shoot_timer += dt
-            if self.shoot_timer >= 0.3:
+            if self.shoot_timer >= 0.2:
                 self.can_shoot = True
                 self.shoot_timer = 0
 
         if not self.can_shoot_goo:
             self.shoot_goo_timer += dt
-            if self.shoot_goo_timer >= 1:
+            if self.shoot_goo_timer >= 0.7:
                 self.can_shoot_goo = True
                 self.shoot_goo_timer = 0
 
@@ -113,8 +113,11 @@ class Enemy_3(pygame.sprite.Sprite):
     def shoot(self, dt):
         if self.can_shoot:
             bullet = BadBullet(self.rect.centerx, self.rect.centery, self.screen_height)
-            bullet2 = BadBullet(self.rect.centerx - 30, self.rect.centery, self.screen_height)
-            bullet3 = BadBullet(self.rect.centerx + 30, self.rect.centery, self.screen_height)
+            bullet2 = BadBullet(self.rect.centerx - 100, self.rect.centery, self.screen_height)
+            bullet3 = BadBullet(self.rect.centerx + 100, self.rect.centery, self.screen_height)
+            bullet.speed = 9
+            bullet2.speed = 9
+            bullet3.speed = 9
             BadBullet.bullets.add(bullet, bullet2, bullet3)
             self.can_shoot = False
 

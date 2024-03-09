@@ -23,7 +23,7 @@ class Enemy_2(pygame.sprite.Sprite):
         self.entry_speed = 1
         self.entry_duration = 2
         self.entry_complete = False
-        self.health = 500
+        self.health = 600
         self.hit_time = None
         self.killed = False
         self.screen_height = screen_height
@@ -47,7 +47,7 @@ class Enemy_2(pygame.sprite.Sprite):
         for bullet in bullet_hits:
             self.hit_time = pygame.time.get_ticks()
             self.change_sprite('../sprites/enemy_2_hit.png')
-            self.health -= 1000
+            self.health -= 10
             if self.health <= 0:
                 self.killed = True
             bullet.kill()
@@ -69,13 +69,13 @@ class Enemy_2(pygame.sprite.Sprite):
 
         if not self.can_shoot:
             self.shoot_timer += dt
-            if self.shoot_timer >= 1:
+            if self.shoot_timer >= 0.5:
                 self.can_shoot = True
                 self.shoot_timer = 0
 
         if not self.can_shoot_goo:
             self.shoot_goo_timer += dt
-            if self.shoot_goo_timer >= 2:
+            if self.shoot_goo_timer >= 1.3:
                 self.can_shoot_goo = True
                 self.shoot_goo_timer = 0
             
@@ -121,8 +121,10 @@ class Enemy_2(pygame.sprite.Sprite):
 
     def shoot(self, dt):
         if self.can_shoot:
-            bullet1 = BadBullet(self.rect.centerx - 10, self.rect.centery, self.screen_height)
-            bullet2 = BadBullet(self.rect.centerx + 10, self.rect.centery, self.screen_height)
+            bullet1 = BadBullet(self.rect.centerx - 30, self.rect.centery, self.screen_height)
+            bullet2 = BadBullet(self.rect.centerx + 30, self.rect.centery, self.screen_height)
+            bullet1.speed = 8
+            bullet2.speed = 8
             BadBullet.bullets.add(bullet1, bullet2)
             self.can_shoot = False
 

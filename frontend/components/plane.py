@@ -49,11 +49,16 @@ class Plane(pygame.sprite.Sprite):
         self.hit_timer = 0
         self.is_hit = False
 
+        self.hit_tracker = 0
+
 
     def start_game(self):
         self.game_running = True
         self.start_time = pygame.time.get_ticks()
         self.elapsed_seconds = 0
+
+    def draw_hitbox(self, screen):
+        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
 
     def update(self, dt, elapsed_seconds):
         movement = self.speed * dt 
@@ -163,28 +168,42 @@ class Plane(pygame.sprite.Sprite):
         enemy_goo_hits = pygame.sprite.spritecollide(self, MonsterGoo.goos, False)
         for bullet in bad_bullet_hits:
             self.health -= 10
+            self.hit_tracker += 5
             self.is_hit = True
         for goo in enemy_goo_hits:
             if not goo.has_hit_plane:
+                self.hit_tracker += 7
                 goo.plane_hit = True
                 goo.has_hit_plane = True
                 self.health -= 30
                 self.is_hit = True
 
     def change_sprite(self, new_image, new_scale):
+        old_center = self.rect.center
         self.planes.remove(self)
-        self.image = pygame.transform.scale(
+        scaled_image = pygame.transform.scale(
             new_image,
             (
                 int(new_image.get_width() * new_scale),
                 int(new_image.get_height() * new_scale),
             ),
         )
+        self.image = scaled_image
         self.original_image = new_image
+        self.rect = self.image.get_rect()
+        self.rect.center = old_center
         self.planes.add(self)
 
+
     def update_hit_sprite(self, new_image_path):
-        self.image = pygame.transform.scale(new_image_path, (120, 120))
+        original_width, original_height = new_image_path.get_size()
+        aspect_ratio = original_width / original_height
+
+        new_width = int(self.rect.height * aspect_ratio)
+        new_height = int(self.rect.height)
+
+        scaled_image = pygame.transform.scale(new_image_path, (new_width, new_height))
+        self.image = scaled_image
         
 
     def healthbar(self, window):

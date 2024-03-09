@@ -23,7 +23,7 @@ class Enemy_1(pygame.sprite.Sprite):
         self.entry_speed = 1.5
         self.entry_duration = 2
         self.entry_complete = False
-        self.health = 100
+        self.health = 300
         self.hit_time = None
         self.killed = False
         self.screen_height = screen_height
@@ -46,7 +46,7 @@ class Enemy_1(pygame.sprite.Sprite):
         for bullet in bullet_hits:
             self.hit_time = pygame.time.get_ticks()
             self.change_sprite('../sprites/enemy_1_hit.png')
-            self.health -= 1000
+            self.health -= 10
             if self.health <= 0:
                 self.killed = True
             bullet.kill()
@@ -73,7 +73,7 @@ class Enemy_1(pygame.sprite.Sprite):
 
         if not self.can_shoot_goo:
             self.shoot_goo_timer += dt
-            if self.shoot_goo_timer >= 3:
+            if self.shoot_goo_timer >= 2:
                 self.can_shoot_goo = True
                 self.shoot_goo_timer = 0
 
