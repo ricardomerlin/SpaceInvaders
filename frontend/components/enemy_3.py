@@ -24,7 +24,7 @@ class Enemy_3(pygame.sprite.Sprite):
         self.entry_speed = 1
         self.entry_duration = 2
         self.entry_complete = False
-        self.health = 5000
+        self.health = 10
         self.hit_time = None
         self.killed = False
         self.screen_height = screen_height

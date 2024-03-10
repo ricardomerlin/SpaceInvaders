@@ -57,8 +57,8 @@ class Plane(pygame.sprite.Sprite):
         self.start_time = pygame.time.get_ticks()
         self.elapsed_seconds = 0
 
-    def draw_hitbox(self, screen):
-        pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
+    # def draw_hitbox(self, screen):
+    #     pygame.draw.rect(screen, (255, 0, 0), self.rect, 2)
 
     def update(self, dt, elapsed_seconds):
         movement = self.speed * dt 
@@ -225,7 +225,7 @@ class Plane(pygame.sprite.Sprite):
         pygame.draw.rect(window, bar_color, (health_bar_x, health_bar_y, filled_width, health_bar_height))
         
         font = pygame.font.Font(None, 20)
-        text = font.render('Health', True, (255, 255, 255))
+        text = font.render('Plane Health', True, (255, 255, 255))
         text_rect = text.get_rect(center=(self.screen.get_width() // 2, health_bar_y + health_bar_height - 20))
         window.blit(text, text_rect)
 

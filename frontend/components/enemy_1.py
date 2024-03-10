@@ -9,7 +9,7 @@ class Enemy_1(pygame.sprite.Sprite):
     def __init__(self, x, y, speed, movement_type, screen_height):
         super().__init__()
         self.image = pygame.image.load('../sprites/enemy_1.png')
-        self.image = pygame.transform.scale(self.image, (120, 120))
+        self.image = pygame.transform.scale(self.image, (120, 100))
         self.rect = self.image.get_rect()
         self.rect.center = (x, -self.rect.height)
         self.speed = speed
@@ -23,7 +23,7 @@ class Enemy_1(pygame.sprite.Sprite):
         self.entry_speed = 1.5
         self.entry_duration = 2
         self.entry_complete = False
-        self.health = 300
+        self.health = 10
         self.hit_time = None
         self.killed = False
         self.screen_height = screen_height
@@ -37,7 +37,7 @@ class Enemy_1(pygame.sprite.Sprite):
 
     def change_sprite(self, new_image_path):
         new_image = pygame.image.load(new_image_path)
-        self.image = pygame.transform.scale(new_image, (120, 120))
+        self.image = pygame.transform.scale(new_image, (120, 100))
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def hit(self):
@@ -56,9 +56,11 @@ class Enemy_1(pygame.sprite.Sprite):
             self.health -= 30
             if self.health <= 0:
                 self.killed = True
-            missle.hit = True        
+            missle.hit = True  
+            missle.kill()      
 
     def update(self, dt):
+        # print(self.health)
         current_time = pygame.time.get_ticks()
         elapsed_time = (current_time - self.start_time) / 1000
 

@@ -9,8 +9,6 @@ from missles import Missle
 from monsterGoo import MonsterGoo
 from background import Background
 from title_screen import TitleScreen
-from win_screen import WinScreen
-from gameover_screen import GameOverScreen
 import random
 import requests
 
@@ -48,11 +46,9 @@ hit_tracker = 0
 
 plane = Plane(screen, x, y, plane_1_standard, plane_1_slow, plane_1_fast, plane_2_standard, plane_2_slow, plane_2_fast, plane_3_standard, plane_3_slow, plane_3_fast, plane_1_hit, plane_2_hit, plane_3_hit)
 
-bg = Background('../images/space.jpg', SCREEN_WIDTH, SCREEN_HEIGHT)
+bg = Background('../images/space_pic.jpg', SCREEN_WIDTH, SCREEN_HEIGHT)
 
 title_screen = TitleScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
-win_screen = WinScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
-game_over_screen = GameOverScreen(SCREEN_WIDTH, SCREEN_HEIGHT)
 
 clock = pygame.time.Clock()
 
@@ -104,7 +100,8 @@ username_submitted = False
 
 
 def reset_game():
-    global game_over, game_running, game_started, enemy_wave_1_spawn_info, enemy_wave_2_spawn_info, enemy_wave_3_spawn_info, enemy_wave_1_spawn_index, enemy_wave_2_spawn_index, enemy_wave_3_spawn_index, enemy_kill_counter, current_score, updated_score, win_displayed, input_text, username_submitted
+    global game_over, game_running, game_started, enemy_wave_1_spawn_info, enemy_wave_2_spawn_info, enemy_wave_3_spawn_info, enemy_wave_1_spawn_index, enemy_wave_2_spawn_index, enemy_wave_3_spawn_index, enemy_kill_counter, enemy_spawn_counter, current_score, updated_score, win_displayed, input_text, username_submitted, win_cliche_selected, lose_cliche_selected
+
     game_over = False
     game_running = False
     game_started = False
@@ -128,11 +125,13 @@ def reset_game():
     enemy_wave_2_spawn_index = 0
     enemy_wave_3_spawn_index = 0
     enemy_kill_counter = 0
+    enemy_spawn_counter = 0
     current_score = 0
     updated_score = 0
     plane.hit_tracker = 0
     win_displayed = False
     username_submitted = False
+    win_cliche_selected = False
     lose_cliche_selected = False
 
     plane.rect.x = x
@@ -176,14 +175,14 @@ while running:
 
     if input_blink_timer >= BLINK_FREQUENCY:
         input_box_visible = not input_box_visible
-        input_blink_timer = 0  # Reset the timer
+        input_blink_timer = 0
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
-                get_players()
+                # get_players()
                 if not game_running:
                     reset_game()
                     game_running = True
@@ -220,8 +219,7 @@ while running:
         plane.update(dt, elapsed_seconds)
         Bullet.update_all(dt)
         plane.draw(screen)
-        plane.draw_hitbox(screen)  # Draw the hitbox of the plane
-        plane.healthbar(screen)
+        # plane.draw_hitbox(screen)
         Bullet.draw_all(screen)
         Bullet.bullets.update(dt)
         BadBullet.draw_all(screen)
@@ -234,6 +232,8 @@ while running:
 
         enemy_spawn_counter += dt
         if game_started:
+            plane.healthbar(screen)
+
             if enemy_spawn_counter >= enemy_spawn_delay:
                 if enemy_wave_1_spawn_index < len(enemy_wave_1_spawn_info):
                     enemies_1.add(enemy_wave_1_spawn_info[enemy_wave_1_spawn_index])
@@ -273,11 +273,13 @@ while running:
                 enemy.hit()
                 enemy.update(dt)
                 enemy.draw(screen)
+                        
+            plane.healthbar(screen)
+
 
         if plane.health <= 0:
             if game_over == False:
                 subtract_score()
-            # get_players()
 
             if not lose_cliche_selected:
                 cliche_game_over = ["You'll get 'em next time!", "Better luck next time!", "You can do it!", "You're so close!", "Game over!"]
@@ -338,7 +340,7 @@ while running:
             screen.fill((0, 0, 0))
             win_text = font.render(win_random_cliche, True, (255, 0, 0))
             score_text = font.render('Score: ' + str(updated_score), True, (255, 0, 0))
-            high_score_instruction = font.render('Enter your username and press Enter to save your score', True, (255, 0, 0))            
+            high_score_instruction = font.render('Enter your username and hit enter to save your score', True, (255, 0, 0))            
             space_down_text = font.render('Press Space to head back to the home screen', True, (255, 0, 0))
             
             win_text_rect = win_text.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
@@ -349,7 +351,7 @@ while running:
             if not username_submitted:
                 screen.blit(win_text, win_text_rect)
                 screen.blit(score_text, score_text_rect)
-                screen.blit(space_down_text, space_down_text_rect)
+                screen.blit(high_score_instruction, high_score_instruction_rect)
 
             if input_box_visible and username_submitted == False:
                 pygame.draw.rect(screen, WHITE, input_box_rect, 2)
@@ -375,12 +377,12 @@ while running:
             plane.rect.x = x
             plane.rect.y = y
             plane.update(dt, 0)
+        
 
     else:
         if not game_over:
+            print('title screen!!!')
             title_screen.update(screen)
-        else:
-            game_over_screen.update(screen)
             
     pygame.display.flip()
 

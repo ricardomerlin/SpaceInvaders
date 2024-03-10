@@ -8,8 +8,8 @@ from monsterGoo import MonsterGoo
 class Enemy_2(pygame.sprite.Sprite):
     def __init__(self, x, y, speed, movement_type, screen_height):
         super().__init__()
-        self.image = pygame.image.load('../sprites/enemy_2.png')
-        self.image = pygame.transform.scale(self.image, (150, 150))
+        self.image = pygame.image.load('../sprites/test.png')
+        self.image = pygame.transform.scale(self.image, (130, 110))
         self.rect = self.image.get_rect()
         self.rect.center = (x, -self.rect.height)
         self.speed = speed
@@ -23,7 +23,7 @@ class Enemy_2(pygame.sprite.Sprite):
         self.entry_speed = 1
         self.entry_duration = 2
         self.entry_complete = False
-        self.health = 600
+        self.health = 10
         self.hit_time = None
         self.killed = False
         self.screen_height = screen_height
@@ -38,7 +38,7 @@ class Enemy_2(pygame.sprite.Sprite):
 
     def change_sprite(self, new_image_path):
         new_image = pygame.image.load(new_image_path)
-        self.image = pygame.transform.scale(new_image, (150, 150))
+        self.image = pygame.transform.scale(new_image, (130, 110))
         self.rect = self.image.get_rect(center=self.rect.center)
 
     def hit(self):
@@ -46,7 +46,7 @@ class Enemy_2(pygame.sprite.Sprite):
         missle_hits = pygame.sprite.spritecollide(self, Missle.missles, False)
         for bullet in bullet_hits:
             self.hit_time = pygame.time.get_ticks()
-            self.change_sprite('../sprites/enemy_2_hit.png')
+            self.change_sprite('../sprites/test_hit.png')
             self.health -= 10
             if self.health <= 0:
                 self.killed = True
