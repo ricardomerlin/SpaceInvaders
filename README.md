@@ -23,9 +23,9 @@ You must have python 3.8 set up on your machine.
 
 Run pipenv shell in two terminals: 
 
-    - In the first one, cd into backend and run 'python app.py' to run the leaderboard server.
+* In the first one, cd into backend and run 'python app.py' to run the leaderboard server.
 
-    - In the second one, cd into mainGame and run 'python main.py' to run the main game.
+* In the second one, cd into mainGame and run 'python main.py' to run the main game.
 
 
 ## Have fun!
