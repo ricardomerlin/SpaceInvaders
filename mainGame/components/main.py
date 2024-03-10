@@ -141,14 +141,18 @@ def reset_game():
     title_screen.update(screen)
 
 def get_players():
-    high_scores.clear()
-    response = requests.get('http://127.0.0.1:5555/players')
+    try:
+        high_scores.clear()
+        response = requests.get('http://127.0.0.1:5555/players')
 
-    if response.status_code == 200:
-        data = response.json()
-        players = data['players']
-        for player in players:
-            high_scores.append(player)
+        if response.status_code == 200:
+            data = response.json()
+            players = data['players']
+            for player in players:
+                high_scores.append(player)
+    except requests.ConnectionError:
+            print("Failed to connect to the server. Please make sure the server is running.")
+
 
 def subtract_score():
     global updated_score
@@ -159,15 +163,18 @@ def subtract_score():
     # print(f'updated score: {updated_score}')
     # print(f'current score: {current_score}')
 
-
 def post_player(username, score):
-    url = 'http://127.0.0.1:5555/players'
-    data = {'username': username, 'score': updated_score}
+    try:
+        url = 'http://127.0.0.1:5555/players'
+        data = {'username': username, 'score': updated_score}
+        
+        response = requests.post(url, json=data)
+        
+        if response.status_code == 201:
+            print('Player added successfully')
+    except requests.ConnectionError:
+        print("Failed to connect to the server. Please make sure the server is running.")
     
-    response = requests.post(url, json=data)
-    
-    if response.status_code == 201:
-        print('Player added successfully')
 
 while running:
     dt = clock.tick(60) / 1000.0
@@ -381,7 +388,6 @@ while running:
 
     else:
         if not game_over:
-            print('title screen!!!')
             title_screen.update(screen)
             
     pygame.display.flip()

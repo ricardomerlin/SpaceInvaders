@@ -23,17 +23,20 @@ def get_players():
 
 @app.post('/players')
 def create_player():
-    data = request.get_json()
+    try:
+        data = request.get_json()
 
-    new_player = Player(
-        username=data['username'],
-        score=data.get('score')
-    )
+        new_player = Player(
+            username=data['username'],
+            score=data.get('score', 0)
+        )
 
-    db.session.add(new_player)
-    db.session.commit()
+        db.session.add(new_player)
+        db.session.commit()
 
-    return {'id': new_player.id}, 201
+        return {'id': new_player.id}, 201
+    except Exception as e:
+        return {'error': str(e)}, 400
 
 if __name__ == '__main__':
     app.run(port=5555, debug=True)
